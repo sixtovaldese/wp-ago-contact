@@ -1,0 +1,109 @@
+/* aGo Contact, Frontend Form Styles */
+
+.ago-contact-form-wrap { max-width: 600px; margin: 0 auto; }
+
+.ago-field { margin-bottom: 16px; }
+.ago-field label { display: block; margin-bottom: 4px; font-weight: 500; font-size: 14px; }
+.ago-required { color: #d63638; }
+.ago-field input[type="text"],
+.ago-field input[type="email"],
+.ago-field input[type="tel"],
+.ago-field select,
+.ago-field textarea { width: 100%; box-sizing: border-box; font-size: 15px; font-family: inherit; }
+.ago-field textarea { resize: vertical; min-height: 100px; }
+
+.ago-checkbox-label { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; cursor: pointer; }
+.ago-checkbox-label input { margin-top: 3px; }
+
+.ago-hp { position: absolute; left: -9999px; }
+
+.ago-submit { cursor: pointer; font-size: 15px; font-family: inherit; }
+.ago-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.ago-form-status { margin-top: 12px; padding: 10px 16px; border-radius: 4px; font-size: 14px; }
+.ago-form-status.success { background: #edfaef; color: #006908; }
+.ago-form-status.error { background: #fcf0f1; color: #8a1116; }
+
+/* ── Theme: Modern ── */
+
+.ago-theme-modern input[type="text"],
+.ago-theme-modern input[type="email"],
+.ago-theme-modern input[type="tel"],
+.ago-theme-modern select,
+.ago-theme-modern textarea {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    transition: border-color 0.2s;
+    outline: none;
+    background: #fafafa;
+}
+.ago-theme-modern input:focus,
+.ago-theme-modern select:focus,
+.ago-theme-modern textarea:focus { border-color: #2271b1; background: #fff; }
+
+.ago-theme-modern .ago-submit {
+    background: #2271b1;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.ago-theme-modern .ago-submit:hover { background: #135e96; }
+
+/* ── Theme: Classic ── */
+
+.ago-theme-classic input[type="text"],
+.ago-theme-classic input[type="email"],
+.ago-theme-classic input[type="tel"],
+.ago-theme-classic select,
+.ago-theme-classic textarea {
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    padding: 8px 10px;
+    background: #fff;
+}
+.ago-theme-classic input:focus,
+.ago-theme-classic select:focus,
+.ago-theme-classic textarea:focus { border-color: #2271b1; box-shadow: 0 0 0 1px #2271b1; outline: none; }
+
+.ago-theme-classic .ago-submit {
+    background: #2271b1;
+    color: #fff;
+    border: 1px solid #2271b1;
+    border-radius: 3px;
+    padding: 10px 24px;
+    font-weight: 600;
+}
+.ago-theme-classic .ago-submit:hover { background: #135e96; border-color: #135e96; }
+
+/* ── Theme: Minimal ── */
+
+.ago-theme-minimal input[type="text"],
+.ago-theme-minimal input[type="email"],
+.ago-theme-minimal input[type="tel"],
+.ago-theme-minimal select,
+.ago-theme-minimal textarea {
+    border: none;
+    border-bottom: 2px solid #dcdcde;
+    border-radius: 0;
+    padding: 10px 2px;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+.ago-theme-minimal input:focus,
+.ago-theme-minimal select:focus,
+.ago-theme-minimal textarea:focus { border-bottom-color: #2271b1; outline: none; }
+
+.ago-theme-minimal .ago-submit {
+    background: transparent;
+    color: #2271b1;
+    border: 2px solid #2271b1;
+    border-radius: 0;
+    padding: 10px 32px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.ago-theme-minimal .ago-submit:hover { background: #2271b1; color: #fff; }

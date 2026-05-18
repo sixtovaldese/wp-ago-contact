@@ -1,0 +1,93 @@
+/* aGo Contact, Admin CSS */
+
+.ago-wrap { max-width: 1200px; margin: 20px auto 0; }
+.ago-layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+.ago-main { min-width: 0; }
+.ago-sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.ago-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.ago-logo { height: 28px; width: auto; vertical-align: middle; }
+.ago-header h1 { margin: 0; font-size: 22px; }
+.ago-desc { margin: 2px 0 0; color: #646970; }
+
+.ago-card { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.ago-card h2 { margin: 0 0 8px; font-size: 16px; }
+.ago-card h3 { margin: 0 0 8px; font-size: 15px; }
+.ago-card-desc { color: #646970; margin: 0 0 16px; }
+
+/* Fields table */
+.ago-fields-table { width: 100%; border-collapse: collapse; }
+.ago-fields-table th,
+.ago-fields-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f0f0f1; }
+.ago-fields-table thead th { font-weight: 600; color: #1d2327; font-size: 13px; }
+.ago-fields-table input[type="text"] { width: 100%; }
+
+/* Radio group for themes */
+.ago-radio-group { display: flex; gap: 12px; }
+.ago-radio-card { display: flex; align-items: center; gap: 6px; padding: 10px 16px; border: 2px solid #dcdcde; border-radius: 6px; cursor: pointer; transition: border-color 0.2s; }
+.ago-radio-card:has(input:checked) { border-color: #2271b1; background: #f0f7fc; }
+.ago-radio-card input { margin: 0; }
+
+/* Features list */
+.ago-features { list-style: none; padding: 0; margin: 12px 0 0; }
+.ago-features li { font-size: 13px; padding: 3px 0; color: #555; }
+.ago-features li::before { content: "\2713"; color: #00a32a; font-weight: bold; margin-right: 8px; }
+
+/* Donation */
+.ago-donation { text-align: center; }
+.ago-donation-amounts { display: flex; gap: 8px; justify-content: center; margin: 12px 0; }
+.ago-amount { display: inline-block; padding: 8px 18px; background: #f0f0f1; border: 1px solid #c3c4c7; border-radius: 4px; color: #1d2327; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+.ago-amount:hover { background: #2271b1; color: #fff; border-color: #2271b1; }
+.ago-coffee-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 24px; background: #1d2327; color: #fff !important; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; transition: background 0.2s; margin: 8px 0; }
+.ago-coffee-btn:hover { background: #2271b1; color: #fff !important; }
+.ago-donation-note { font-size: 11px; color: #999; margin-top: 8px; }
+
+/* Footer */
+.ago-footer { text-align: center; padding: 16px 0; }
+.ago-footer-logo { display: inline-block; margin-bottom: 8px; transition: opacity 0.2s; }
+.ago-footer-logo:hover { opacity: 0.8; }
+
+/* Status message */
+#ago-contact-status { margin-top: 12px; padding: 10px 16px; border-radius: 4px; font-size: 14px; }
+#ago-contact-status.success { background: #edfaef; color: #00a32a; border: 1px solid #00a32a; }
+#ago-contact-status.error { background: #fcf0f1; color: #d63638; border: 1px solid #d63638; }
+
+/* ── Submissions page ── */
+
+.ago-submissions-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.ago-filters { display: flex; gap: 4px; }
+.ago-filter.active { background: #2271b1; color: #fff; border-color: #2271b1; }
+
+.ago-submissions-loading { text-align: center; padding: 40px; color: #646970; }
+.ago-submissions-empty { text-align: center; padding: 40px; color: #646970; }
+
+#ago-submissions-tbody .status-new { font-weight: 600; }
+#ago-submissions-tbody .status-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+#ago-submissions-tbody .status-badge.new { background: #2271b1; color: #fff; }
+#ago-submissions-tbody .status-badge.read { background: #dcdcde; color: #50575e; }
+#ago-submissions-tbody .status-badge.replied { background: #00a32a; color: #fff; }
+#ago-submissions-tbody .status-badge.spam { background: #d63638; color: #fff; }
+
+.ago-pagination { display: flex; justify-content: center; gap: 4px; padding-top: 16px; }
+.ago-pagination button { min-width: 32px; }
+.ago-pagination button.active { background: #2271b1; color: #fff; border-color: #2271b1; }
+
+.ago-view-btn { cursor: pointer; color: #2271b1; background: none; border: none; text-decoration: underline; font-size: 13px; }
+.ago-delete-inline { cursor: pointer; color: #d63638; background: none; border: none; font-size: 13px; }
+
+/* Modal */
+.ago-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100100; display: flex; align-items: center; justify-content: center; }
+.ago-modal-content { background: #fff; border-radius: 8px; width: 600px; max-width: 90vw; max-height: 80vh; display: flex; flex-direction: column; }
+.ago-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #dcdcde; }
+.ago-modal-header h2 { margin: 0; font-size: 16px; }
+.ago-modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #646970; padding: 0; line-height: 1; }
+.ago-modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+.ago-modal-body .ago-detail-row { margin-bottom: 12px; }
+.ago-modal-body .ago-detail-label { font-weight: 600; font-size: 12px; text-transform: uppercase; color: #646970; margin-bottom: 2px; }
+.ago-modal-body .ago-detail-value { font-size: 14px; word-break: break-word; }
+.ago-modal-body .ago-detail-message { background: #f6f7f7; padding: 12px; border-radius: 4px; white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
+.ago-modal-footer { display: flex; gap: 8px; padding: 16px 20px; border-top: 1px solid #dcdcde; }
+
+@media (max-width: 960px) {
+    .ago-layout { grid-template-columns: 1fr; }
+}
