@@ -54,7 +54,7 @@ class Spam {
             'body' => [
                 'secret'   => $secret,
                 'response' => $token,
-                'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
+                'remoteip' => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '',
             ],
             'timeout' => 10,
         ] );

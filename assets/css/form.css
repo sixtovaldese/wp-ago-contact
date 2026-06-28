@@ -1,5 +1,3 @@
-/* aGo Contact, Frontend Form Styles */
-
 .ago-contact-form-wrap { max-width: 600px; margin: 0 auto; }
 
 .ago-field { margin-bottom: 16px; }
@@ -23,8 +21,6 @@
 .ago-form-status { margin-top: 12px; padding: 10px 16px; border-radius: 4px; font-size: 14px; }
 .ago-form-status.success { background: #edfaef; color: #006908; }
 .ago-form-status.error { background: #fcf0f1; color: #8a1116; }
-
-/* ── Theme: Modern ── */
 
 .ago-theme-modern input[type="text"],
 .ago-theme-modern input[type="email"],
@@ -53,8 +49,6 @@
 }
 .ago-theme-modern .ago-submit:hover { background: #135e96; }
 
-/* ── Theme: Classic ── */
-
 .ago-theme-classic input[type="text"],
 .ago-theme-classic input[type="email"],
 .ago-theme-classic input[type="tel"],
@@ -78,8 +72,6 @@
     font-weight: 600;
 }
 .ago-theme-classic .ago-submit:hover { background: #135e96; border-color: #135e96; }
-
-/* ── Theme: Minimal ── */
 
 .ago-theme-minimal input[type="text"],
 .ago-theme-minimal input[type="email"],

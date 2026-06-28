@@ -1,11 +1,11 @@
 === aGo Contact ===
-Contributors: sixtovaldese
+Contributors: agolab
 Donate link: https://paypal.me/sixtovaldes
 Tags: contact form, form, spam, submissions, email
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,14 +17,14 @@ aGo Contact gives you a lightweight contact form shortcode with built-in spam pr
 
 **Features**
 
-* Shortcode `[ago_contact]` to drop the form on any page or post.
+* Shortcode `[agocontact]` or Gutenberg block to drop the form on any page or post.
 * Configurable recipient email, subject and success message.
-* Honeypot + time check + rate limit per IP to block bots.
-* Email notification to the site admin on every submission.
-* Submissions inbox: read, mark as resolved or delete.
+* Honeypot, math captcha and optional Cloudflare Turnstile, plus rate limit per IP to block bots.
+* Email notification to the site admin on every submission, with optional auto-reply.
+* Submissions inbox: read, mark as replied or spam, delete and export to CSV.
 * GDPR-friendly: consent checkbox optional, IP only stored for spam control.
-* Stylable through theme CSS or the included minimal styles.
-* No external services. No tracking. No third-party APIs.
+* Stylable through theme CSS or the included minimal styles, 3 visual themes.
+* No tracking. The only optional external service is Cloudflare Turnstile, off by default.
 
 == Installation ==
 
@@ -32,7 +32,7 @@ aGo Contact gives you a lightweight contact form shortcode with built-in spam pr
 2. Activate the plugin through the Plugins menu in WordPress.
 3. Go to aGo Tools, then Contact.
 4. Set the recipient email and other options.
-5. Add `[ago_contact]` to any page or post.
+5. Add `[agocontact]` to any page or post, or insert the aGo Contact Form block.
 
 == Frequently Asked Questions ==
 
@@ -46,7 +46,7 @@ In a custom database table created on activation. View them in the Submissions t
 
 = Can I export submissions? =
 
-CSV export is planned for a future release.
+Yes. The Submissions screen includes a one-click CSV export of every submission.
 
 == External services ==
 
@@ -62,12 +62,31 @@ This plugin connects to Cloudflare Turnstile only when the site owner enables Tu
 * Visitor IP and user agent are stored alongside the submission for spam diagnostics.
 * When Turnstile is enabled, the visitor's interaction with the widget is processed by Cloudflare for bot detection.
 
+== Screenshots ==
+
+1. The contact form on the front end, with configurable fields, math captcha and consent checkbox.
+2. Settings screen: enable or require each field, choose a theme, set email notifications, spam protection and messages.
+3. Submissions inbox: filter by status, view, mark as replied or spam, delete and export to CSV.
+
 == Changelog ==
+
+= 1.0.2 =
+* Renamed the contact form shortcode to `[agocontact]` and the editor block to `agocontact/form`, and prefixed the remaining identifiers with a 4+ character prefix to avoid name collisions.
+
+= 1.0.1 =
+* Form fields are now fully configurable: every field, including name, email and message, can be enabled, disabled or marked as required from the settings screen.
+* Translations now load automatically via WordPress just-in-time loading.
 
 = 1.0.0 =
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+The contact form shortcode is now `[agocontact]`.
+
+= 1.0.1 =
+All form fields are now fully configurable from the settings screen.
 
 = 1.0.0 =
 Initial release.

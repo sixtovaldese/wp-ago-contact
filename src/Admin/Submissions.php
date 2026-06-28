@@ -12,14 +12,13 @@ class Submissions {
         ?>
         <div class="wrap ago-wrap">
             <div class="ago-header">
-                <img src="<?php echo esc_url( AGO_CONTACT_URL . 'assets/img/agolab.webp' ); ?>" alt="aGo Lab" class="ago-logo">
+                <img src="<?php echo esc_url( AGOCONTACT_URL . 'assets/img/agolab.webp' ); ?>" alt="aGo Lab" class="ago-logo">
                 <div>
                     <h1><?php esc_html_e( 'Submissions', 'ago-contact' ); ?></h1>
                     <p class="ago-desc"><?php esc_html_e( 'Manage contact form submissions.', 'ago-contact' ); ?></p>
                 </div>
             </div>
 
-            <!-- Filters & Actions -->
             <div class="ago-card">
                 <div class="ago-submissions-toolbar">
                     <div class="ago-filters">
@@ -35,7 +34,6 @@ class Submissions {
                 </div>
             </div>
 
-            <!-- Submissions List -->
             <div class="ago-card" id="ago-submissions-list">
                 <div class="ago-submissions-loading"><?php esc_html_e( 'Loading...', 'ago-contact' ); ?></div>
                 <table class="wp-list-table widefat striped" style="display:none">
@@ -58,7 +56,6 @@ class Submissions {
                 <div class="ago-pagination" id="ago-pagination"></div>
             </div>
 
-            <!-- Detail Modal -->
             <div id="ago-submission-modal" class="ago-modal" style="display:none">
                 <div class="ago-modal-content">
                     <div class="ago-modal-header">

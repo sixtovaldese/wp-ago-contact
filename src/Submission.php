@@ -8,7 +8,7 @@ class Submission {
 
     private static function table(): string {
         global $wpdb;
-        return $wpdb->prefix . 'ago_contact_submissions';
+        return $wpdb->prefix . 'agocontact_submissions';
     }
 
     public static function create_table(): void {
@@ -40,7 +40,7 @@ class Submission {
 
     public static function insert( array $data, string $ip ): int {
         global $wpdb;
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table; cached via object cache layer.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table; single write on form submit, object caching not applicable.
         $wpdb->insert( self::table(), [
             'name'       => $data['name'] ?? '',
             'email'      => $data['email'] ?? '',
@@ -125,20 +125,30 @@ class Submission {
     }
 
     public static function to_csv( array $items ): string {
+        // Wrap each value in quotes and neutralize CSV/formula injection: a cell
+        // starting with = + - @ tab or CR is prefixed with an apostrophe so
+        // spreadsheets treat it as text, not a formula.
+        $cell = static function ( $value ): string {
+            $value = (string) $value;
+            if ( '' !== $value && false !== strpbrk( $value[0], "=+-@\t\r" ) ) {
+                $value = "'" . $value;
+            }
+            return '"' . str_replace( '"', '""', $value ) . '"';
+        };
         $output = "ID,Name,Email,Phone,Subject,Company,Department,Message,Status,Date\n";
         foreach ( $items as $item ) {
             $output .= sprintf(
                 "%d,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
                 $item->id,
-                '"' . str_replace( '"', '""', $item->name ) . '"',
-                '"' . str_replace( '"', '""', $item->email ) . '"',
-                '"' . str_replace( '"', '""', $item->phone ) . '"',
-                '"' . str_replace( '"', '""', $item->subject ) . '"',
-                '"' . str_replace( '"', '""', $item->company ) . '"',
-                '"' . str_replace( '"', '""', $item->department ) . '"',
-                '"' . str_replace( '"', '""', $item->message ) . '"',
-                $item->status,
-                $item->created_at
+                $cell( $item->name ),
+                $cell( $item->email ),
+                $cell( $item->phone ),
+                $cell( $item->subject ),
+                $cell( $item->company ),
+                $cell( $item->department ),
+                $cell( $item->message ),
+                $cell( $item->status ),
+                $cell( $item->created_at )
             );
         }
         return $output;

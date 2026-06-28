@@ -53,7 +53,6 @@ class Form {
                     </div>
                 <?php endif; ?>
 
-                <!-- Honeypot -->
                 <div class="ago-hp" aria-hidden="true" style="position:absolute;left:-9999px">
                     <input type="text" name="website" tabindex="-1" autocomplete="off">
                 </div>

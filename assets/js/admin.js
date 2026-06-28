@@ -1,14 +1,11 @@
-/* aGo Contact Admin JS */
 (function () {
     'use strict';
 
     var $ = document.querySelector.bind(document);
     var $$ = document.querySelectorAll.bind(document);
 
-    var restUrl = (window.agoContact || {}).restUrl || '';
-    var nonce   = (window.agoContact || {}).nonce || '';
-
-    /* ───── Settings Page ───── */
+    var restUrl = (window.agocontactAdmin || {}).restUrl || '';
+    var nonce   = (window.agocontactAdmin || {}).nonce || '';
 
     var saveBtn = $('#ago-save-settings');
     if (saveBtn) {
@@ -16,7 +13,6 @@
     }
 
     function initSettingsPage() {
-        // Auto-reply toggle
         var arToggle = $('#ago-autoreply-enabled');
         if (arToggle) {
             arToggle.addEventListener('change', function () {
@@ -26,7 +22,6 @@
             });
         }
 
-        // Captcha type radio toggle
         $$('input[name="ago-captcha-type"]').forEach(function (radio) {
             radio.addEventListener('change', function () {
                 var isTurnstile = this.value === 'turnstile';
@@ -36,7 +31,6 @@
             });
         });
 
-        // Save
         saveBtn.addEventListener('click', function () {
             var data = {
                 fields: {},
@@ -54,7 +48,6 @@
                 department_options: ($('#ago-department-options') || {}).value || '',
             };
 
-            // Collect fields
             var fieldNames = ['name', 'email', 'phone', 'subject', 'company', 'department', 'message', 'gdpr'];
             fieldNames.forEach(function (key) {
                 data.fields[key] = {
@@ -64,7 +57,6 @@
                 };
             });
 
-            // Theme
             var themeInput = $('input[name="ago-theme"]:checked');
             data.theme = themeInput ? themeInput.value : 'modern';
 
@@ -95,9 +87,6 @@
     }
 
     function getFieldProp(field, prop) {
-        // Check hidden input first
-        var hidden = $('input[type="hidden"][data-field="' + field + '"][data-prop="' + prop + '"]');
-        if (hidden) return true;
         var cb = $('input[type="checkbox"][data-field="' + field + '"][data-prop="' + prop + '"]');
         return cb ? cb.checked : false;
     }
@@ -116,8 +105,6 @@
         setTimeout(function () { box.style.display = 'none'; }, 3000);
     }
 
-    /* ───── Submissions Page ───── */
-
     var subsList = $('#ago-submissions-list');
     if (subsList) {
         initSubmissionsPage();
@@ -127,7 +114,6 @@
         var currentFilter = '';
         var currentPage = 1;
 
-        // Filters
         $$('.ago-filter').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 $$('.ago-filter').forEach(function (b) { b.classList.remove('active'); });
@@ -138,15 +124,14 @@
             });
         });
 
-        // Export CSV
         var exportBtn = $('#ago-export-csv');
         if (exportBtn) {
             exportBtn.addEventListener('click', function () {
-                window.location.href = restUrl + '/export?_wpnonce=' + nonce;
+                var u = (window.agocontactAdmin || {}).exportUrl || '';
+                if (u) window.location.href = u;
             });
         }
 
-        // Modal close
         var modalClose = $('.ago-modal-close');
         if (modalClose) {
             modalClose.addEventListener('click', closeModal);
@@ -158,7 +143,6 @@
             });
         }
 
-        // Initial load
         loadSubmissions();
 
         function loadSubmissions() {
@@ -203,17 +187,14 @@
 
                 if (table) table.style.display = 'table';
 
-                // Pagination
                 renderPagination(data.pages, data.page);
 
-                // Bind view buttons
                 $$('.ago-view-btn').forEach(function (btn) {
                     btn.addEventListener('click', function () {
                         openSubmission(parseInt(btn.getAttribute('data-id'), 10));
                     });
                 });
 
-                // Bind delete buttons
                 $$('.ago-delete-inline').forEach(function (btn) {
                     btn.addEventListener('click', function () {
                         if (!confirm('Delete this submission?')) return;
@@ -260,19 +241,16 @@
                 body.innerHTML += '<div class="ago-detail-row"><div class="ago-detail-label">IP</div><div class="ago-detail-value">' + esc(item.ip_address || '') + '</div></div>';
                 body.innerHTML += '<div class="ago-detail-row"><div class="ago-detail-label">DATE</div><div class="ago-detail-value">' + esc(item.created_at) + '</div></div>';
 
-                // Set action buttons
                 $('.ago-mark-replied').setAttribute('data-id', item.id);
                 $('.ago-mark-spam').setAttribute('data-id', item.id);
                 $('.ago-delete-sub').setAttribute('data-id', item.id);
 
                 $('#ago-submission-modal').style.display = 'flex';
 
-                // Refresh list to update read status
                 loadSubmissions();
             });
         }
 
-        // Modal action buttons
         var markReplied = $('.ago-mark-replied');
         if (markReplied) {
             markReplied.addEventListener('click', function () {

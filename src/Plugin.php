@@ -16,58 +16,50 @@ class Plugin {
     }
 
     private function __construct() {
-        add_action( 'init', [ $this, 'load_textdomain' ] );
+        add_action( 'init', [ $this, 'maybe_upgrade_db' ] );
         add_action( 'init', [ $this, 'register_block' ] );
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'admin_assets' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'frontend_assets' ] );
         add_action( 'rest_api_init', [ $this, 'register_routes' ] );
-        add_shortcode( 'ago-contact', [ $this, 'render_shortcode' ] );
+        add_action( 'admin_post_agocontact_export', [ $this, 'export_csv' ] );
+        add_shortcode( 'agocontact', [ $this, 'render_shortcode' ] );
     }
 
-    /* ───── i18n ───── */
+    /* ───── DB schema guard ───── */
 
-    public function load_textdomain(): void {
-        $locale = determine_locale();
-        $modir  = WP_LANG_DIR . '/plugins/';
-
-        foreach ( [ 'es_ES', 'pt_BR' ] as $loc ) {
-            $src  = AGO_CONTACT_PATH . "languages/ago-contact-{$loc}.l10n.php";
-            $dest = $modir . "ago-contact-{$loc}.l10n.php";
-            if ( file_exists( $src ) && ! file_exists( $dest ) ) {
-                @copy( $src, $dest );
-            }
+    public function maybe_upgrade_db(): void {
+        if ( get_option( 'agocontact_db_version' ) !== AGOCONTACT_VERSION ) {
+            Submission::create_table();
+            update_option( 'agocontact_db_version', AGOCONTACT_VERSION );
         }
-
-        load_plugin_textdomain( 'ago-contact', false, dirname( plugin_basename( AGO_CONTACT_FILE ) ) . '/languages' );
     }
 
     /* ───── Admin Menu ───── */
 
     public function admin_menu(): void {
-        if ( empty( $GLOBALS['admin_page_hooks']['ago-tools'] ) ) {
+        if ( empty( $GLOBALS['admin_page_hooks']['agolab-tools'] ) ) {
             add_menu_page(
                 __( 'aGo Tools', 'ago-contact' ),
                 __( 'aGo Tools', 'ago-contact' ),
                 'manage_options',
-                'ago-tools',
+                'agolab-tools',
                 '__return_null',
                 'dashicons-hammer',
                 81
             );
         }
 
-        // Settings under aGo Herramientas
         add_submenu_page(
-            'ago-tools',
+            'agolab-tools',
             __( 'aGo Contact', 'ago-contact' ),
             __( 'Contact', 'ago-contact' ),
             'manage_options',
-            'ago-contact',
+            'agocontact',
             [ Admin\Settings::class, 'render' ]
         );
 
-        remove_submenu_page( 'ago-tools', 'ago-tools' );
+        remove_submenu_page( 'agolab-tools', 'agolab-tools' );
 
         // Submissions as top-level menu (next to Comments, position 26)
         $unread = Submission::count_unread();
@@ -77,7 +69,7 @@ class Plugin {
             __( 'Submissions', 'ago-contact' ),
             __( 'Submissions', 'ago-contact' ) . $badge,
             'manage_options',
-            'ago-contact-submissions',
+            'agocontact-submissions',
             [ Admin\Submissions::class, 'render' ],
             'dashicons-email-alt',
             26
@@ -87,29 +79,30 @@ class Plugin {
     /* ───── Admin Assets ───── */
 
     public function admin_assets( string $hook ): void {
-        if ( ! str_ends_with( $hook, '_page_ago-contact' ) && $hook !== 'toplevel_page_ago-contact-submissions' && ! str_ends_with( $hook, '_page_ago-contact-submissions' ) ) {
+        if ( ! str_ends_with( $hook, '_page_agocontact' ) && $hook !== 'toplevel_page_agocontact-submissions' && ! str_ends_with( $hook, '_page_agocontact-submissions' ) ) {
             return;
         }
 
         wp_enqueue_style(
-            'ago-contact-admin',
-            AGO_CONTACT_URL . 'assets/css/admin.css',
+            'agocontact-admin',
+            AGOCONTACT_URL . 'assets/css/admin.css',
             [],
-            AGO_CONTACT_VERSION
+            AGOCONTACT_VERSION
         );
 
         wp_enqueue_script(
-            'ago-contact-admin',
-            AGO_CONTACT_URL . 'assets/js/admin.js',
+            'agocontact-admin',
+            AGOCONTACT_URL . 'assets/js/admin.js',
             [],
-            AGO_CONTACT_VERSION,
+            AGOCONTACT_VERSION,
             true
         );
 
-        wp_localize_script( 'ago-contact-admin', 'agoContact', [
-            'restUrl'  => rest_url( 'ago-contact/v1' ),
-            'nonce'    => wp_create_nonce( 'wp_rest' ),
-            'settings' => self::get_settings(),
+        wp_localize_script( 'agocontact-admin', 'agocontactAdmin', [
+            'restUrl'   => rest_url( 'agocontact/v1' ),
+            'nonce'     => wp_create_nonce( 'wp_rest' ),
+            'exportUrl' => wp_nonce_url( admin_url( 'admin-post.php?action=agocontact_export' ), 'agocontact_export' ),
+            'settings'  => self::get_settings(),
         ] );
     }
 
@@ -121,31 +114,31 @@ class Plugin {
         if ( ! is_a( $post, 'WP_Post' ) ) {
             return;
         }
-        if ( ! has_shortcode( $post->post_content, 'ago-contact' ) && ! has_block( 'ago-contact/form', $post ) ) {
+        if ( ! has_shortcode( $post->post_content, 'agocontact' ) && ! has_block( 'agocontact/form', $post ) ) {
             return;
         }
 
         $settings = self::get_settings();
 
         wp_enqueue_style(
-            'ago-contact-form',
-            AGO_CONTACT_URL . 'assets/css/form.css',
+            'agocontact-form',
+            AGOCONTACT_URL . 'assets/css/form.css',
             [],
-            AGO_CONTACT_VERSION
+            AGOCONTACT_VERSION
         );
 
         wp_enqueue_script(
-            'ago-contact-form',
-            AGO_CONTACT_URL . 'assets/js/form.js',
+            'agocontact-form',
+            AGOCONTACT_URL . 'assets/js/form.js',
             [],
-            AGO_CONTACT_VERSION,
+            AGOCONTACT_VERSION,
             true
         );
 
         $captcha_type = $settings['captcha_type'] ?? 'none';
 
-        wp_localize_script( 'ago-contact-form', 'agoContactForm', [
-            'ajaxUrl'     => rest_url( 'ago-contact/v1/submit' ),
+        wp_localize_script( 'agocontact-form', 'agocontactForm', [
+            'ajaxUrl'     => rest_url( 'agocontact/v1/submit' ),
             'nonce'       => wp_create_nonce( 'wp_rest' ),
             'captchaType' => $captcha_type,
             'turnstile'   => $captcha_type === 'turnstile' && ! empty( $settings['turnstile_site_key'] ),
@@ -161,7 +154,7 @@ class Plugin {
         // Turnstile script. Cloudflare requires their CDN for the widget; documented in readme External Services.
         if ( $captcha_type === 'turnstile' && ! empty( $settings['turnstile_site_key'] ) ) {
             // phpcs:ignore PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent -- Turnstile must load from Cloudflare CDN; declared as external service in readme.txt.
-            wp_enqueue_script( 'cf-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], AGO_CONTACT_VERSION, true );
+            wp_enqueue_script( 'agocontact-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], AGOCONTACT_VERSION, true );
         }
     }
 
@@ -178,7 +171,15 @@ class Plugin {
             return;
         }
 
-        register_block_type( 'ago-contact/form', [
+        wp_register_script(
+            'agocontact-block',
+            AGOCONTACT_URL . 'blocks/form/index.js',
+            [ 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-i18n' ],
+            AGOCONTACT_VERSION,
+            true
+        );
+
+        register_block_type( AGOCONTACT_PATH . 'blocks/form', [
             'render_callback' => function () {
                 return Form::render( self::get_settings() );
             },
@@ -188,7 +189,7 @@ class Plugin {
     /* ───── REST API ───── */
 
     public function register_routes(): void {
-        $ns = 'ago-contact/v1';
+        $ns = 'agocontact/v1';
 
         // Admin: settings
         register_rest_route( $ns, '/settings', [
@@ -204,7 +205,9 @@ class Plugin {
             ],
         ] );
 
-        // Public: submit form
+        // Public by design: front-end visitors submit the contact form without
+        // authentication. rest_submit() enforces honeypot, per-IP rate limiting,
+        // optional captcha, and sanitizes every field before any side effect.
         register_rest_route( $ns, '/submit', [
             'methods'             => 'POST',
             'callback'            => [ $this, 'rest_submit' ],
@@ -236,13 +239,6 @@ class Plugin {
             'callback'            => [ $this, 'rest_delete_submission' ],
             'permission_callback' => [ $this, 'can_manage' ],
         ] );
-
-        // Admin: export CSV
-        register_rest_route( $ns, '/export', [
-            'methods'             => 'GET',
-            'callback'            => [ $this, 'rest_export_csv' ],
-            'permission_callback' => [ $this, 'can_manage' ],
-        ] );
     }
 
     public function can_manage(): bool {
@@ -258,7 +254,7 @@ class Plugin {
     public function rest_save_settings( \WP_REST_Request $request ): \WP_REST_Response {
         $data = $request->get_json_params();
         $settings = self::sanitize_settings( $data );
-        update_option( 'ago_contact_settings', $settings );
+        update_option( 'agocontact_settings', $settings );
         return new \WP_REST_Response( [ 'saved' => true, 'settings' => $settings ] );
     }
 
@@ -275,8 +271,8 @@ class Plugin {
         }
 
         // Rate limiting
-        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-        $rate_key = 'ago_contact_rate_' . md5( $ip );
+        $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '0.0.0.0';
+        $rate_key = 'agocontact_rate_' . md5( $ip );
         $count = (int) get_transient( $rate_key );
         $limit = (int) ( $settings['rate_limit'] ?? 5 );
         if ( $count >= $limit ) {
@@ -292,7 +288,12 @@ class Plugin {
             if ( ! Spam::verify_math( (string) $answer, $hash ) ) {
                 return new \WP_REST_Response( [ 'ok' => false, 'error' => __( 'Incorrect answer. Please try again.', 'ago-contact' ) ], 403 );
             }
-        } elseif ( $captcha_type === 'turnstile' && ! empty( $settings['turnstile_secret_key'] ) ) {
+        } elseif ( $captcha_type === 'turnstile' ) {
+            // Turnstile selected but no secret configured: reject instead of
+            // silently accepting unverified submissions.
+            if ( empty( $settings['turnstile_secret_key'] ) ) {
+                return new \WP_REST_Response( [ 'ok' => false, 'error' => __( 'Spam verification is misconfigured. Please contact the site administrator.', 'ago-contact' ) ], 403 );
+            }
             $token = $data['cf-turnstile-response'] ?? '';
             if ( ! Spam::verify_turnstile( $token, $settings['turnstile_secret_key'] ) ) {
                 return new \WP_REST_Response( [ 'ok' => false, 'error' => __( 'Spam verification failed. Please try again.', 'ago-contact' ) ], 403 );
@@ -334,6 +335,9 @@ class Plugin {
 
         // Save to DB
         $id = Submission::insert( $submission, $ip );
+        if ( ! $id ) {
+            return new \WP_REST_Response( [ 'ok' => false, 'error' => __( 'Could not save your message. Please try again later.', 'ago-contact' ) ], 500 );
+        }
 
         // Update rate limit
         set_transient( $rate_key, $count + 1, HOUR_IN_SECONDS );
@@ -388,13 +392,25 @@ class Plugin {
         return new \WP_REST_Response( [ 'ok' => true ] );
     }
 
-    public function rest_export_csv(): \WP_REST_Response {
+    /**
+     * CSV export via admin-post.php (not REST): a REST response is always
+     * JSON-encoded by core, so it cannot serve a raw CSV download.
+     */
+    public function export_csv(): void {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to export submissions.', 'ago-contact' ), '', [ 'response' => 403 ] );
+        }
+        check_admin_referer( 'agocontact_export' );
+
         $items = Submission::get_all();
         $csv   = Submission::to_csv( $items );
-        $response = new \WP_REST_Response( $csv );
-        $response->header( 'Content-Type', 'text/csv; charset=utf-8' );
-        $response->header( 'Content-Disposition', 'attachment; filename="ago-contact-submissions-' . gmdate( 'Y-m-d' ) . '.csv"' );
-        return $response;
+
+        nocache_headers();
+        header( 'Content-Type: text/csv; charset=utf-8' );
+        header( 'Content-Disposition: attachment; filename="ago-contact-submissions-' . gmdate( 'Y-m-d' ) . '.csv"' );
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV body; values neutralized against formula injection in Submission::to_csv().
+        echo $csv;
+        exit;
     }
 
     /* ───── Email ───── */
@@ -412,16 +428,19 @@ class Plugin {
         $body .= "\n" . __( 'Sent from:', 'ago-contact' ) . ' ' . home_url();
 
         $headers = [];
-        if ( ! empty( $submission['email'] ) ) {
-            $name = $submission['name'] ?? '';
-            $headers[] = "Reply-To: {$name} <{$submission['email']}>";
+        if ( ! empty( $submission['email'] ) && is_email( $submission['email'] ) ) {
+            $name      = str_replace( [ '"', "\r", "\n" ], '', (string) ( $submission['name'] ?? '' ) );
+            $headers[] = 'Reply-To: "' . $name . '" <' . $submission['email'] . '>';
         }
 
         wp_mail( $to, $subject, $body, $headers );
     }
 
     private function send_autoreply( array $submission, array $settings ): void {
-        $to      = $submission['email'];
+        $to = $submission['email'];
+        if ( ! is_email( $to ) ) {
+            return;
+        }
         /* translators: %s: site name */
         $subject = $settings['autoreply_subject'] ?: sprintf( __( 'We received your message, %s', 'ago-contact' ), get_bloginfo( 'name' ) );
         $body    = $settings['autoreply_body'] ?: __( "Thank you for contacting us. We have received your message and will get back to you as soon as possible.\n\nBest regards.", 'ago-contact' );
@@ -449,7 +468,7 @@ class Plugin {
             'success_message'     => __( 'Message sent successfully!', 'ago-contact' ),
             'department_options'  => "General\nSales\nSupport",
         ];
-        $saved = get_option( 'ago_contact_settings', [] );
+        $saved = get_option( 'agocontact_settings', [] );
         return wp_parse_args( $saved, $defaults );
     }
 

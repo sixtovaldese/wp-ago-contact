@@ -1,8 +1,7 @@
-/* aGo Contact, Frontend Form JS */
 (function () {
     'use strict';
 
-    var config = window.agoContactForm || {};
+    var config = window.agocontactForm || {};
     var form = document.querySelector('.ago-contact-form');
     if (!form) return;
 
@@ -12,7 +11,6 @@
         var btn = form.querySelector('.ago-submit');
         var status = form.querySelector('.ago-form-status');
 
-        // Collect data
         var data = {};
         var inputs = form.querySelectorAll('input, textarea, select');
         for (var i = 0; i < inputs.length; i++) {
@@ -25,13 +23,11 @@
             }
         }
 
-        // Turnstile token
         if (config.turnstile) {
             var tsInput = form.querySelector('[name="cf-turnstile-response"]');
             if (tsInput) data['cf-turnstile-response'] = tsInput.value;
         }
 
-        // Disable button
         btn.disabled = true;
         btn.textContent = config.i18n ? config.i18n.sending : 'Sending...';
         if (status) status.style.display = 'none';
@@ -50,7 +46,6 @@
                     status.style.display = 'block';
                 }
                 form.reset();
-                // Reset Turnstile
                 if (config.turnstile && window.turnstile) {
                     window.turnstile.reset();
                 }
@@ -75,7 +70,6 @@
         });
     });
 
-    // Store original button text
     var submitBtn = form.querySelector('.ago-submit');
     if (submitBtn) submitBtn.setAttribute('data-original', submitBtn.textContent);
 

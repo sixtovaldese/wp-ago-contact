@@ -1,0 +1,16 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "agocontact/form",
+    "title": "aGo Contact Form",
+    "category": "widgets",
+    "icon": "email-alt",
+    "description": "Contact form with spam protection, email notifications and submission management.",
+    "keywords": [ "contact", "form", "email" ],
+    "textdomain": "ago-contact",
+    "editorScript": "agocontact-block",
+    "supports": {
+        "html": false,
+        "multiple": false
+    }
+}

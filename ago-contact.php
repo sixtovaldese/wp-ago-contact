@@ -3,10 +3,11 @@
  * Plugin Name: aGo Contact
  * Plugin URI:  https://ago.cl/herramientas/
  * Description: Simple contact form with spam protection, email notifications, and submission management.
- * Version:     1.0.0
+ * Version:     1.0.2
  * Author:      aGo Lab
- * Author URI:  https://github.com/agolab
+ * Author URI:  https://ago.cl/
  * License:     GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: ago-contact
  * Domain Path: /languages
  * Requires at least: 6.0
@@ -15,19 +16,18 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AGO_CONTACT_VERSION', '1.0.0' );
-define( 'AGO_CONTACT_FILE', __FILE__ );
-define( 'AGO_CONTACT_PATH', plugin_dir_path( __FILE__ ) );
-define( 'AGO_CONTACT_URL', plugin_dir_url( __FILE__ ) );
+define( 'AGOCONTACT_VERSION', '1.0.2' );
+define( 'AGOCONTACT_FILE', __FILE__ );
+define( 'AGOCONTACT_PATH', plugin_dir_path( __FILE__ ) );
+define( 'AGOCONTACT_URL', plugin_dir_url( __FILE__ ) );
 
-/* PSR-4 Autoloader: AgoLab\Contact\ → src/ */
 spl_autoload_register( function ( string $class ) {
     $prefix = 'AgoLab\\Contact\\';
     if ( strncmp( $class, $prefix, strlen( $prefix ) ) !== 0 ) {
         return;
     }
     $relative = substr( $class, strlen( $prefix ) );
-    $file     = AGO_CONTACT_PATH . 'src/' . str_replace( '\\', '/', $relative ) . '.php';
+    $file     = AGOCONTACT_PATH . 'src/' . str_replace( '\\', '/', $relative ) . '.php';
     if ( file_exists( $file ) ) {
         require $file;
     }

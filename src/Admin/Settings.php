@@ -16,17 +16,16 @@ class Settings {
             <div class="ago-layout">
                 <div class="ago-main">
                     <div class="ago-header">
-                        <img src="<?php echo esc_url( AGO_CONTACT_URL . 'assets/img/agolab.webp' ); ?>" alt="aGo Lab" class="ago-logo">
+                        <img src="<?php echo esc_url( AGOCONTACT_URL . 'assets/img/agolab.webp' ); ?>" alt="aGo Lab" class="ago-logo">
                         <div>
                             <h1><?php esc_html_e( 'aGo Contact', 'ago-contact' ); ?></h1>
                             <p class="ago-desc"><?php esc_html_e( 'Simple contact form with spam protection and submission management.', 'ago-contact' ); ?></p>
                         </div>
                     </div>
 
-                    <!-- Fields Configuration -->
                     <div class="ago-card">
                         <h2><?php esc_html_e( 'Form Fields', 'ago-contact' ); ?></h2>
-                        <p class="ago-card-desc"><?php esc_html_e( 'Enable or disable fields and set them as required. Use the shortcode [ago-contact] or the Gutenberg block to display the form.', 'ago-contact' ); ?></p>
+                        <p class="ago-card-desc"><?php esc_html_e( 'Enable or disable fields and set them as required. Use the shortcode [agocontact] or the Gutenberg block to display the form.', 'ago-contact' ); ?></p>
                         <table class="ago-fields-table">
                             <thead>
                                 <tr>
@@ -41,20 +40,10 @@ class Settings {
                                 <tr>
                                     <td><strong><?php echo esc_html( ucfirst( $key ) ); ?></strong></td>
                                     <td>
-                                        <?php if ( in_array( $key, [ 'name', 'email', 'message' ], true ) ) : ?>
-                                            <input type="checkbox" checked disabled>
-                                            <input type="hidden" data-field="<?php echo esc_attr( $key ); ?>" data-prop="enabled" value="1">
-                                        <?php else : ?>
-                                            <input type="checkbox" data-field="<?php echo esc_attr( $key ); ?>" data-prop="enabled" <?php checked( ! empty( $field['enabled'] ) ); ?>>
-                                        <?php endif; ?>
+                                        <input type="checkbox" data-field="<?php echo esc_attr( $key ); ?>" data-prop="enabled" <?php checked( ! empty( $field['enabled'] ) ); ?>>
                                     </td>
                                     <td>
-                                        <?php if ( in_array( $key, [ 'email', 'message' ], true ) ) : ?>
-                                            <input type="checkbox" checked disabled>
-                                            <input type="hidden" data-field="<?php echo esc_attr( $key ); ?>" data-prop="required" value="1">
-                                        <?php else : ?>
-                                            <input type="checkbox" data-field="<?php echo esc_attr( $key ); ?>" data-prop="required" <?php checked( ! empty( $field['required'] ) ); ?>>
-                                        <?php endif; ?>
+                                        <input type="checkbox" data-field="<?php echo esc_attr( $key ); ?>" data-prop="required" <?php checked( ! empty( $field['required'] ) ); ?>>
                                     </td>
                                     <td>
                                         <input type="text" data-field="<?php echo esc_attr( $key ); ?>" data-prop="label" value="<?php echo esc_attr( $field['label'] ?? '' ); ?>" class="regular-text">
@@ -65,14 +54,12 @@ class Settings {
                         </table>
                     </div>
 
-                    <!-- Department Options -->
                     <div class="ago-card">
                         <h2><?php esc_html_e( 'Department Options', 'ago-contact' ); ?></h2>
                         <p class="ago-card-desc"><?php esc_html_e( 'One option per line. Only used when the Department field is enabled.', 'ago-contact' ); ?></p>
                         <textarea id="ago-department-options" rows="4" class="large-text"><?php echo esc_textarea( $settings['department_options'] ?? '' ); ?></textarea>
                     </div>
 
-                    <!-- Appearance -->
                     <div class="ago-card">
                         <h2><?php esc_html_e( 'Appearance', 'ago-contact' ); ?></h2>
                         <div class="ago-radio-group">
@@ -85,7 +72,6 @@ class Settings {
                         </div>
                     </div>
 
-                    <!-- Notifications -->
                     <div class="ago-card">
                         <h2><?php esc_html_e( 'Email Notifications', 'ago-contact' ); ?></h2>
                         <table class="form-table">
@@ -110,7 +96,6 @@ class Settings {
                         </table>
                     </div>
 
-                    <!-- Spam Protection -->
                     <div class="ago-card">
                         <h2><?php esc_html_e( 'Spam Protection', 'ago-contact' ); ?></h2>
                         <p class="ago-card-desc"><?php esc_html_e( 'Honeypot is always active. Choose additional verification below.', 'ago-contact' ); ?></p>
@@ -155,7 +140,6 @@ class Settings {
                         </table>
                     </div>
 
-                    <!-- Messages -->
                     <div class="ago-card">
                         <h2><?php esc_html_e( 'Messages', 'ago-contact' ); ?></h2>
                         <table class="form-table">
@@ -170,11 +154,10 @@ class Settings {
                         </table>
                     </div>
 
-                    <!-- Shortcode Info -->
                     <div class="ago-card">
                         <h2><?php esc_html_e( 'Usage', 'ago-contact' ); ?></h2>
                         <p><?php esc_html_e( 'Add the contact form to any page or post:', 'ago-contact' ); ?></p>
-                        <code style="display:inline-block;padding:8px 16px;background:#f0f0f1;border-radius:4px;font-size:14px">[ago-contact]</code>
+                        <code style="display:inline-block;padding:8px 16px;background:#f0f0f1;border-radius:4px;font-size:14px">[agocontact]</code>
                         <p style="margin-top:12px"><?php esc_html_e( 'Or use the "aGo Contact Form" Gutenberg block.', 'ago-contact' ); ?></p>
                     </div>
 
@@ -182,10 +165,18 @@ class Settings {
                     <div id="ago-contact-status" style="display:none"></div>
                 </div>
 
-                <!-- Sidebar -->
                 <div class="ago-sidebar">
 
-                    <!-- About -->
+                    <div class="card ago-card">
+                        <h3><?php esc_html_e( 'Quick links', 'ago-contact' ); ?></h3>
+                        <ul class="ago-features" style="list-style:none;padding:0;margin:0">
+                            <li><a href="https://ago.cl/herramientas/wordpress/ago-contact/docs" target="_blank" rel="noopener"><?php esc_html_e( 'Documentation', 'ago-contact' ); ?></a></li>
+                            <li><a href="https://www.mail-tester.com/" target="_blank" rel="noopener"><?php esc_html_e( 'Email deliverability test', 'ago-contact' ); ?></a></li>
+                            <li><a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener"><?php esc_html_e( 'Cloudflare Turnstile', 'ago-contact' ); ?></a></li>
+                            <li><a href="https://gdpr.eu/" target="_blank" rel="noopener"><?php esc_html_e( 'GDPR overview', 'ago-contact' ); ?></a></li>
+                        </ul>
+                    </div>
+
                     <div class="card ago-card">
                         <h3><?php esc_html_e( 'About', 'ago-contact' ); ?></h3>
                         <p style="font-size:13px;color:#666">
@@ -199,11 +190,24 @@ class Settings {
                             <li><?php esc_html_e( 'Email notifications + auto-reply', 'ago-contact' ); ?></li>
                             <li><?php esc_html_e( 'Submission management + CSV export', 'ago-contact' ); ?></li>
                             <li><?php esc_html_e( '3 visual themes', 'ago-contact' ); ?></li>
-                            <li><?php esc_html_e( 'Works with aGo SMTP', 'ago-contact' ); ?></li>
+                            <li><?php esc_html_e( 'Works with aGo Mail Pilot', 'ago-contact' ); ?></li>
                         </ul>
                     </div>
 
-                    <!-- Donation -->
+                    <div class="card ago-card">
+                        <h3 style="margin-top:0"><?php esc_html_e( 'Other aGo Lab plugins', 'ago-contact' ); ?></h3>
+                        <p style="font-size:13px;color:#666;margin-top:0"><?php esc_html_e( 'Free WordPress plugins from the same team. No upsell pressure.', 'ago-contact' ); ?></p>
+                        <ul class="ago-features">
+                            <li><strong>aGo Mail Pilot</strong>, <?php esc_html_e( 'Guided SMTP email delivery.', 'ago-contact' ); ?></li>
+                            <li><strong>aGo AI Chatbot</strong>, <?php esc_html_e( 'AI customer support widget for your site.', 'ago-contact' ); ?></li>
+                            <li><strong>aGo Legal</strong>, <?php esc_html_e( 'GDPR / LGPD / Chile Law 21.719 compliance toolkit.', 'ago-contact' ); ?></li>
+                            <li><strong>aGo Access</strong>, <?php esc_html_e( 'Accessibility toolbar and automatic fixes.', 'ago-contact' ); ?></li>
+                        </ul>
+                        <p>
+                            <a href="https://ago.cl/herramientas/" target="_blank" rel="noopener" class="button button-secondary" style="width:100%;text-align:center"><?php esc_html_e( 'Browse aGo Lab plugins', 'ago-contact' ); ?></a>
+                        </p>
+                    </div>
+
                     <div class="card ago-card ago-donation">
                         <h3><?php esc_html_e( 'Support Open Source', 'ago-contact' ); ?></h3>
                         <p style="font-size:13px;color:#666">
@@ -223,10 +227,9 @@ class Settings {
                         </p>
                     </div>
 
-                    <!-- Footer with logo -->
                     <div class="ago-footer">
                         <a href="https://ago.cl" target="_blank" rel="noopener" class="ago-footer-logo">
-                            <img src="<?php echo esc_url( AGO_CONTACT_URL . 'assets/img/agolab.webp' ); ?>" alt="aGo Lab" style="height:40px;width:auto">
+                            <img src="<?php echo esc_url( AGOCONTACT_URL . 'assets/img/agolab.webp' ); ?>" alt="aGo Lab" style="height:40px;width:auto">
                         </a>
                         <p>
                             <?php
